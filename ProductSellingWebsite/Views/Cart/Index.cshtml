@@ -1,0 +1,48 @@
+@model IEnumerable<ProductSellingWebsite.Models.CartItem>
+@{
+    ViewData["Title"] = "Cart";
+    decimal total = (decimal)ViewBag.Total;
+}
+<h2>Your Cart</h2>
+@if (!Model.Any())
+{
+    <p>Your cart is empty.</p>
+    <a asp-controller="Products" asp-action="Index" class="btn btn-primary">Continue Shopping</a>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Product</th>
+                <th>Price</th>
+                <th>Quantity</th>
+                <th>Subtotal</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.Product.Name</td>
+                    <td>@item.Product.Price.ToString("C")</td>
+                    <td>@item.Quantity</td>
+                    <td>@(item.Product.Price * item.Quantity).ToString("C")</td>
+                    <td>
+                        <form asp-action="Remove" method="post">
+                            <input type="hidden" name="productId" value="@item.Product.Id" />
+                            <button type="submit" class="btn btn-danger btn-sm">Remove</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+            <tr>
+                <td colspan="3" class="text-end"><strong>Total:</strong></td>
+                <td><strong>@total.ToString("C")</strong></td>
+                <td></td>
+            </tr>
+        </tbody>
+    </table>
+    <a asp-controller="Products" asp-action="Index" class="btn btn-primary">Continue Shopping</a>
+}
